@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final long DURACION = 120000; //120 segundos
 
-    private static final String WEB = "http://alumno.mobi/~alumno/superior/casielles/php/upload.php";
-    private static final String WEB_ERROR = "http://alumno.mobi/~alumno/superior/casielles/errores.txt";
+    private static final String WEB = "192.168.0.139/acceso/php/upload.php";
+    private static final String WEB_ERROR = "192.168.0.139/acceso/php/errores.txt";
     private static final String PASSWORD = "123";
 
     @Override
