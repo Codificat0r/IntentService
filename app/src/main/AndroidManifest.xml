@@ -23,6 +23,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--Hay que declarar el service en el manifest -->
+        <service android:name=".ServiceAsyncHttpResponseHandler">
+
+        </service>
+        <receiver android:name=".MyBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.example.ad_trabajo_t2.success"/>
+                <action android:name="com.example.ad_trabajo_t2.failure"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
