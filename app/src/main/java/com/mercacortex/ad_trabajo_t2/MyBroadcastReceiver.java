@@ -6,7 +6,14 @@ import android.content.Intent;
 import android.util.Log;
 
 /**
- * Created by usuario on 15/02/18.
+ * Este Broadcast receiver lo hariamos cuando el origen es una notificacion.
+ * Esto se debe porque podemos tener muchas notificaciones y el broadcastreceiver es
+ * el que identifica de cual proviene cada intent
+ *
+ * Si queremos que un service sin notificacion se comunique directamente con la activity
+ * para avisarle de que ha finalizado algo, la activity tendrá un LocalBroadcast que
+ * recibirá el intent y será un objeto BroadcastReceiver que registraremos y tendrá el ciclo de vida
+ * que tenga la actividad.
  */
 
 public class MyBroadcastReceiver extends BroadcastReceiver {

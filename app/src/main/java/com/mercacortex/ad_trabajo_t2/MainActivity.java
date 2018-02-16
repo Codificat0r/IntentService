@@ -1,13 +1,18 @@
 package com.mercacortex.ad_trabajo_t2;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -87,13 +92,52 @@ public class MainActivity extends AppCompatActivity {
     private static final String FICHERO_FRASES = "frases.txt";
     private static final String FICHERO_IMAGENES = "imagenes.txt";
     private static final String FICHERO_INTERVALO = "intervalo";
-    private static final String FICHERO_ERROR = "errores.txt";
 
     private static final long DURACION = 120000; //120 segundos
 
-    private static final String WEB = "http://alumno.mobi/superior/cruz/enlacesImagenes.txt";
-    private static final String WEB_ERROR = "192.168.0.139/acceso/php/errores.txt";
-    private static final String PASSWORD = "123";
+    /**
+     * Vamos a crear un "handler"/manejador de intent propio de la actividad. Esto es un
+     * LocalBroadcast. Lo registraremos desde codigo
+     */
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case MyIntentService.INTENT_ACTION_SUCCESS:
+                    //Le pasamos el fichero que ha fallado en su descarga al metodo que sube
+                    //el error
+                    //subirError(intent.getExtras().getString(MyIntentService.INTENT_DATA_SOURCE));
+                    Log.d("SERVICE", "DESCARGA REALIZADA DE " + intent.getExtras().getString(MyIntentService.INTENT_DATA_SOURCE));
+                    break;
+                case MyIntentService.INTENT_ACTION_FAILURE:
+                    Log.d("SERVICE", "DESCARGA FALLIDA DE " + intent.getExtras().getString(MyIntentService.INTENT_DATA_SOURCE));
+                    //Ahora le decimos al metodo que cambiará las frases e imagenes. Le pasamos el fichero
+                    //que ha tenido exito que viene en el intent para que sepa que va a mostrar.
+                    //change()
+                    break;
+            }
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Creamos el intent filter para los distintos intent que podemos recibir
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MyIntentService.INTENT_ACTION_FAILURE);
+        intentFilter.addAction(MyIntentService.INTENT_ACTION_SUCCESS);
+        //Registramos el BroadcastReceiver de forma local, en tiempo de ejecución
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
+    }
+
+    //Para este caso al pausarse la actividad no tiene sentido que reciba nada ya que no se
+    //está mostrando al usuario.
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        timer.cancel();
+        //timer.cancel();
     }
 
     /**

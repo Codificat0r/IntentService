@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:text="http://alumno.mobi/superior/cruz/enlacesImagenes.txt" />
+            android:text="https://images5.alphacoders.com/685/685514.jpg" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
